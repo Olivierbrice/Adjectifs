@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les adjectifs dans la phrase</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f8ff; }
+    .phrase { font-size: 24px; margin-bottom: 20px; }
+    .mot { cursor: pointer; padding: 5px; border-radius: 5px; }
+    .mot:hover { background-color: #e0e0e0; }
+    .correct { background-color: #c8e6c9; }
+    .incorrect { background-color: #ffcdd2; }
+    .feedback { margin-top: 10px; font-weight: bold; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Les adjectifs dans la phrase</h1>
+  <div class="phrase" id="phrase"></div>
+  <div class="feedback" id="feedback"></div>
+  <button onclick="nextPhrase()">Phrase suivante</button>
+
+  <script>
+    const phrases = [
+      "Le chat noir dort.",
+      "J’ai une robe rouge.",
+      "Le gâteau est sucré.",
+      "Voici une maison bleue.",
+      "Le chien gentil aboie.",
+      "La balle ronde roule.",
+      "Elle porte un chapeau vert.",
+      "Le ciel gris annonce la pluie.",
+      "Le roi vieux marche lentement.",
+      "La fleur jaune sent bon.",
+      "Mon pull chaud me tient bien.",
+      "Il a une montre brillante.",
+      "Le dragon énorme crache du feu.",
+      "Une voiture rapide passe.",
+      "Le bébé mignon rit.",
+      "Le sac lourd tombe.",
+      "La chaise cassée grince.",
+      "Le loup affamé hurle.",
+      "Mon lit doux me plaît.",
+      "La soupe chaude est servie.",
+      "La mer est calme.",
+      "Papa est fatigué.",
+      "Mon frère est grand.",
+      "La glace est froide.",
+      "Je suis content.",
+      "Le poisson est vivant.",
+      "Le soleil semble fort.",
+      "Le lion paraît dangereux.",
+      "Le bébé reste tranquille.",
+      "La nuit devient noire.",
+      "Cette fille est gentille.",
+      "Ce garçon est curieux.",
+      "Le lait reste chaud.",
+      "La robe semble neuve.",
+      "Mon ami est drôle.",
+      "Le ciel devient rose.",
+      "Le bruit est fort.",
+      "Le ballon semble léger.",
+      "Ce chat est malade.",
+      "Mon oncle est vieux.",
+      "J’ai un chapeau pointu.",
+      "Le livre est passionnant.",
+      "Ce stylo est rouge.",
+      "Voici un bateau rapide.",
+      "Le jardin semble propre.",
+      "Ce pull est mouillé."
+    ];
+
+    let current = 0;
+    let score = 0;
+    let usedIndices = [];
+
+    function getAdjectifs(phrase) {
+      // liste basique des adjectifs par phrase (dans l'ordre)
+      const knownAdjectifs = {
+        "Le chat noir dort.": "noir",
+        "J’ai une robe rouge.": "rouge",
+        "Le gâteau est sucré.": "sucré",
+        "Voici une maison bleue.": "bleue",
+        "Le chien gentil aboie.": "gentil",
+        "La balle ronde roule.": "ronde",
+        "Elle porte un chapeau vert.": "vert",
+        "Le ciel gris annonce la pluie.": "gris",
+        "Le roi vieux marche lentement.": "vieux",
+        "La fleur jaune sent bon.": "jaune",
+        "Mon pull chaud me tient bien.": "chaud",
+        "Il a une montre brillante.": "brillante",
+        "Le dragon énorme crache du feu.": "énorme",
+        "Une voiture rapide passe.": "rapide",
+        "Le bébé mignon rit.": "mignon",
+        "Le sac lourd tombe.": "lourd",
+        "La chaise cassée grince.": "cassée",
+        "Le loup affamé hurle.": "affamé",
+        "Mon lit doux me plaît.": "doux",
+        "La soupe chaude est servie.": "chaude",
+        "La mer est calme.": "calme",
+        "Papa est fatigué.": "fatigué",
+        "Mon frère est grand.": "grand",
+        "La glace est froide.": "froide",
+        "Je suis content.": "content",
+        "Le poisson est vivant.": "vivant",
+        "Le soleil semble fort.": "fort",
+        "Le lion paraît dangereux.": "dangereux",
+        "Le bébé reste tranquille.": "tranquille",
+        "La nuit devient noire.": "noire",
+        "Cette fille est gentille.": "gentille",
+        "Ce garçon est curieux.": "curieux",
+        "Le lait reste chaud.": "chaud",
+        "La robe semble neuve.": "neuve",
+        "Mon ami est drôle.": "drôle",
+        "Le ciel devient rose.": "rose",
+        "Le bruit est fort.": "fort",
+        "Le ballon semble léger.": "léger",
+        "Ce chat est malade.": "malade",
+        "Mon oncle est vieux.": "vieux",
+        "J’ai un chapeau pointu.": "pointu",
+        "Le livre est passionnant.": "passionnant",
+        "Ce stylo est rouge.": "rouge",
+        "Voici un bateau rapide.": "rapide",
+        "Le jardin semble propre.": "propre",
+        "Ce pull est mouillé.": "mouillé"
+      };
+      return knownAdjectifs[phrase];
+    }
+
+    function nextPhrase() {
+      if (current >= 6) {
+        document.getElementById("phrase").innerText = `Exercice terminé ! Vous avez trouvé ${score}/6.`;
+        document.getElementById("feedback").innerText = "";
+        return;
+      }
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * phrases.length);
+      } while (usedIndices.includes(idx));
+      usedIndices.push(idx);
+
+      const phrase = phrases[idx];
+      const adj = getAdjectifs(phrase);
+      const container = document.getElementById("phrase");
+      const feedback = document.getElementById("feedback");
+      container.innerHTML = "";
+      feedback.innerText = "";
+
+      phrase.replace('.', '').split(' ').forEach(word => {
+        const span = document.createElement("span");
+        span.innerText = word + " ";
+        span.className = "mot";
+        span.onclick = () => {
+          if (span.innerText.trim().replace('.', '') === adj) {
+            span.classList.add("correct");
+            feedback.innerText = "Bravo ! C’est correct.";
+            score++;
+          } else {
+            span.classList.add("incorrect");
+            feedback.innerText = `Non, la bonne réponse est : "${adj}".`;
+          }
+          // désactiver tous les clics après sélection
+          document.querySelectorAll(".mot").forEach(m => m.onclick = null);
+          current++;
+        };
+        container.appendChild(span);
+      });
+    }
+
+    nextPhrase();
+  </script>
+</body>
+</html>
